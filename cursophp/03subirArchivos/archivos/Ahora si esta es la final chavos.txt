@@ -1,0 +1,213 @@
+drop DATABASE if EXISTS panteon;
+
+create DATABASE panteon;
+use panteon;
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `idAdmin` int(11) NOT NULL,
+  `nombre` varchar(120) NOT NULL,
+  `usuario` varchar(120) NOT NULL,
+  `contrasena` varchar(120) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `difuntos`;
+CREATE TABLE `difuntos` (
+  `idDifunto` int(11) NOT NULL,
+  `nombre` varchar(120) NOT NULL,
+  `apellidoPaterno` varchar(120) NOT NULL,
+  `apellidoMaterno` varchar(120) NOT NULL,
+  `sexo` enum('Femenino','Masculino') NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `fechaDefuncion` date NOT NULL,
+  `fechaRegistro` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TRIGGER IF EXISTS `logRegistro`;
+DELIMITER $$
+CREATE TRIGGER `logRegistro` AFTER INSERT ON `difuntos` FOR EACH ROW INSERT into registros VALUES (new.idDifunto, new.idDifunto, CONCAT(new.nombre,' ', new.apellidoPaterno, ' ', new.apellidoMaterno), (YEAR(new.fechaDefuncion)-YEAR(new.fechaNacimiento)), new.sexo, now(), (100-(SELECT COUNT(*) from difuntos)))
+$$
+DELIMITER ;
+
+DROP TABLE IF EXISTS `registros`;
+CREATE TABLE `registros` (
+  `idRegistro` int(11) NOT NULL,
+  `idDifunto` int(11) NOT NULL,
+  `nombreCompleto` varchar(200) NOT NULL,
+  `edad` int(11) NOT NULL,
+  `sexo` enum('Femenino','Masculino') NOT NULL,
+  `fechaRegistro` date NOT NULL,
+  `capacidad` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+DROP TABLE IF EXISTS `seccion`;
+CREATE TABLE `seccion` (
+  `idSeccion` int(11) NOT NULL,
+  `seccion` enum('A','B') NOT NULL,
+  `fila` int(11) NOT NULL,
+  `columna` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tumbas`;
+CREATE TABLE `tumbas` (
+  `idTumba` int(11) NOT NULL,
+  `idSeccion` int(11) NOT NULL,
+  `idDifunto` int(11) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`idAdmin`),
+  ADD UNIQUE KEY `usuario` (`usuario`);
+
+ALTER TABLE `difuntos`
+  ADD PRIMARY KEY (`idDifunto`);
+
+ALTER TABLE `registros`
+  ADD PRIMARY KEY (`idRegistro`),
+  ADD KEY `idDifunto` (`idDifunto`);
+
+ALTER TABLE `seccion`
+  ADD PRIMARY KEY (`idSeccion`);
+
+ALTER TABLE `tumbas`
+  ADD PRIMARY KEY (`idTumba`),
+  ADD KEY `idSeccion` (`idSeccion`),
+  ADD KEY `idDifunto` (`idDifunto`);
+
+
+ALTER TABLE `admin`
+  MODIFY `idAdmin` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `difuntos`
+  MODIFY `idDifunto` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `seccion`
+  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `tumbas`
+  MODIFY `idTumba` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `registros`
+  ADD CONSTRAINT `registros_ibfk_1` FOREIGN KEY (`idDifunto`) REFERENCES `difuntos` (`idDifunto`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `tumbas`
+  ADD CONSTRAINT `seccion_ibfk_1` FOREIGN KEY (`idSeccion`) REFERENCES `seccion` (`idSeccion`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `tumbas`
+  ADD CONSTRAINT `tumbas_ibfk_1` FOREIGN KEY (`idDifunto`) REFERENCES `difuntos` (`idDifunto`) ON DELETE NO ACTION ON UPDATE CASCADE;
+COMMIT;
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alan', 'Morales', 'Cota', 'Masculino', '1990-03-23', '2022-05-13', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Cesar', 'Meza', 'Ruiz', 'Masculino', '1985-09-30', '2022-01-07', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Daniela', 'Montes', 'Ayala', 'Femenino', '1989-06-19', '2022-06-01', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Rene', 'Aguilar', 'Perez', 'Femenino', '2001-07-11', '2022-04-22', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Oscar', 'Lopez', 'Castro', 'Masculino', '2005-11-01', '2022-05-13', '2022-06-03');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Paola', 'Cosio', 'Pedrin', 'Femenino', '1997-12-17', '2022-02-27', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Cecilia', 'Morales', 'Cota', 'Femenino', '1950-08-06', '2022-05-21', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Ramon', 'Marquez', 'Estrada', 'Masculino', '1945-12-31', '2022-03-06', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Jesus', 'Arce', 'Rojas', 'Masculino', '1945-01-01', '2022-04-30', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Jesus Antonio', 'Garcia', 'Cota', 'Masculino', '2000-09-28', '2022-03-01', '2022-06-03');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Arturo', 'Jordan', 'Cisneros', 'Masculino', '2005-06-07', '2022-06-02', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alan', 'Morales', 'Cota', 'Masculino', '1990-03-23', '2022-05-13', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Maria', 'Ortega', 'Beltran', 'Femenino', '2010-12-12', '2022-04-06', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Claudia Isabel', 'Valdez', 'Ochoa', 'Femenino', '2015-12-04', '2022-05-19', '2022-06-03');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Maria Fernanda', 'Beltran', 'Martinez', 'Femenino', '2019-10-08', '2022-01-29', '2022-06-03');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Maria Luisa', 'Diaz', 'Manriquez', 'Femenino', '2015-11-03', '2022-01-29', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alejandra', 'Avalos', 'Ortiz', 'Femenino', '2001-12-05', '2021-06-19', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Blanca Valeria', 'Barrios', 'Balderas', 'Femenino', '2001-02-17', '2009-12-12', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Jesus Alberto', 'Padilla', 'Sanchez', 'Masculino', '2000-12-05', '2011-11-21', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alondra', 'Carvajal', 'Sanchez', 'Femenino', '1900-12-05', '2005-08-30', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Jose Manuel', 'Ornelas', 'Pedrin', 'Masculino', '1988-01-30', '2020-03-08', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Carlos Emiliano', 'Cosio', 'Amador', 'Masculino', '1970-03-03', '2021-06-19', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Dunia', 'Davalos', 'Hernandez', 'Femenino', '1999-11-09', '2009-08-29', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Luis Antonio', 'Rojas', 'Ibarra', 'Masculino', '1992-09-25', '2017-04-08', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alexis', 'Fernandez', 'Ochoa', 'Masculino', '1988-05-11', '2021-06-19', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Jose Carlos', 'Flores', 'Lopez', 'Masculino', '1990-03-23', '2022-05-11', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Julian Fernando', 'Martinez', 'Castro', 'Masculino', '1977-02-30', '2022-01-07', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Tania', 'Gamboa', 'Diaz', 'Femenino', '1969-02-02', '2012-06-01', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Aide', 'Alvarez', 'Gaxiola', 'Femenino', '2000-04-21', '2019-04-22', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Manuel Sebastian', 'Garcia', 'Castro', 'Masculino', '1999-12-06', '2022-05-01', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Ariel', 'Justo', 'Ortiz', 'Femenino', '2003-12-18', '2021-02-26', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Lizeth', 'Amador', 'Cota', 'Femenino', '1966-04-01', '2022-05-21', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Ariel', 'Sanchez', 'Estrada', 'Masculino', '1961-12-10', '2022-03-06', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Esteban', 'Ibarra', 'Suarez', 'Masculino', '1956-12-11', '2022-09-21', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Luis Alberto', 'Lopez', 'Tirado', 'Masculino', '1976-09-28', '2021-07-17', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alvaro', 'Alvarez', 'Cosio', 'Masculino', '2015-06-07', '2022-12-03', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alan Andres', 'Silva', 'Acosta', 'Masculino', '1963-03-23', '2020-05-13', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Maria Paula', 'Tavares', 'Mendes', 'Femenino', '2010-12-01', '2022-05-06', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Clementina', 'Ramos', 'Garcia', 'Femenino', '1930-12-04', '2015-05-26', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alexa', 'Silva', 'Martinez', 'Femenino', '2020-10-08', '2022-04-29', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Alexandra', 'Mota', 'Bernal', 'Femenino', '2002-12-06', '2022-01-31', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Gabriela', 'Santos', 'Castellanos', 'Femenino', '2001-12-05', '2022-05-03', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Silvia', 'Acuña', 'Romero', 'Femenino', '2001-02-17', '2021-12-12', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Claudio', 'Bravo', 'Medina', 'Masculino', '1953-01-02', '2017-02-03', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Angelica', 'Banega', 'Correa', 'Femenino', '1981-12-12', '2009-08-30', '2022-06-05');
+
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Sebastian', 'Blanco', 'Zelarayan', 'Masculino', '1975-10-19', '2021-03-08', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Lucas Alberto', 'Benitez', 'Amador', 'Masculino', '1993-01-19', '2022-05-05', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Josefa', 'Dominguez', 'Hernandez', 'Femenino', '1939-11-09', '2009-07-18', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Ruben Lisandro', 'Martinez', 'Castro', 'Masculino', '1992-09-25', '2022-04-08', '2022-06-05');
+insert into `difuntos` (`idDifunto`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `fechaDefuncion`, `fechaRegistro`) 
+values (NULL, 'Lucas', 'Pavon', 'Alario', 'Masculino', '1992-10-08', '2022-05-04', '2022-06-05');
