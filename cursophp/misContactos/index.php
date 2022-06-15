@@ -32,6 +32,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php $titulo ?></title>
     <link rel="stylesheet" href="css/mis_contactos.css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="js/mis_contactos.js"></script>
 </head>
 <body>
