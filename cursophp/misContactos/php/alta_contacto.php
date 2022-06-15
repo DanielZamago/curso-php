@@ -25,15 +25,15 @@
             <input type="text" id="numero" class="cambio" placeholder="Ingresa tu numero" name="telefono_txt" title="Tu telefono" required>
         </div>
         <div>
-            <label for="pais">Pais de origen:</label> <br/>
-            <select name="pais_txt" id="pais" class="cambio" required>
-                <option value="" > - - - </option>
+            <label for="pais">Pais: </label>
+            <select id="pais" class="cambio" name="pais_slc" required>
+                <option value="" >- - -</option>
                 <?php include("select_pais.php"); ?>
             </select>
         </div>
         <div>
             <label for="imagen">Imagen:</label>
-            <div class="adjuntar_archivo">
+            <div class="adjuntar-archivo cambio">
                 <input type="file" id="imagen" class="cambio" name="imagen_fls" title="Sube tu imagen"/>
             </div>
         </div>
