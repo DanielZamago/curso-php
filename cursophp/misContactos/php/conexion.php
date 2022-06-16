@@ -8,6 +8,5 @@
         $conectar = new mysqli($servidor,$usuario,$password, $bd);
         return $conectar;
     }
-    $conexion = conectarse();
-	
+    $conexion = conectarse();	
 ?>

@@ -1,20 +1,20 @@
 <form id="alta_contacto" name="alta_frm" action="php/agregar_contacto.php" method="POST" enctype="multipart/form-data">
     <fieldset>
-        <legend>Alta de contacto</legend>
+        <legend>EDITAR CONTACTO</legend>
         <div>
             <label for="email">Correo</label>
-            <input type="email" id="email" class="cambio" name="email_txt" placeholder="Ingresa tu correo" title="Tu correo" required/>
+            <input type="email" id="email" class="cambio" name="email_txt" placeholder="Ingresa tu correo" title="Tu correo"  value="<?php echo $registro["email"]; ?>" required/>
         </div>
         <div>
             <label for="nombre">Nombre</label>
-            <input type="text" name="nombre_txt" id="nombre" class="cambio" placeholder="Ingresa tu nombre" title="Tu nombre" required/>
+            <input type="text" name="nombre_txt" id="nombre" class="cambio" placeholder="Ingresa tu nombre" title="Tu nombre" value="<?php echo $registro["nombre"]; ?>" required/>
         </div>
         <div>
             <label for="m">Sexo</label>
             <br/>
-            <input type="radio" id="m" name="sexo_rdo" title="Sexo" value="M" required /> <label for="m">Masculino</label>
+            <input type="radio" id="m" name="sexo_rdo" title="Sexo" value="M" <?php if($registro["sexo"]=="M"){echo "checked";} ?> required /> <label for="m">Masculino</label>
             <br/>
-            <input type="radio" id="f" name="sexo_rdo" title="Sexo" value="F" required /> <label for="f">Femenino</label>
+            <input type="radio" id="f" name="sexo_rdo" title="Sexo" value="F" <?php if($registro["sexo"]=="F"){echo "checked";} ?> required /> <label for="f">Femenino</label>
         </div>
         <div>
             <label for="nacimiento">Fecha de nacimiento: </label> <br/>
