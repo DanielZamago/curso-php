@@ -1,4 +1,5 @@
 <?php
+    error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
     $op=$_GET["op"];
     switch ($op) {
         case 'alta':
@@ -42,8 +43,8 @@
                 <li><a class="cambio" href="index.php">Home</a></li>
                 <li><a class="cambio" href="?op=alta">Alta contacto</a></li>
                 <li><a class="cambio" href="?op=baja">Baja contacto</a></li>
-                <li><a class="cambio" href="?op=cambios">Modificar contacto</a></li>
-                <li><a class="cambio" href="?op=consultas">Consultar contacto</a></li>
+                <li><a class="cambio" href="?op=cambios">Modificar </a></li>
+                <li><a class="cambio" href="?op=consultas">Consultar</a></li>
             </ul>
         </nav>
         <section id="principal">

@@ -5,6 +5,11 @@
     $ejecutar_consulta = $conexion->query($consulta);
     echo "123";
     while($registro = $ejecutar_consulta->fetch_assoc()){
-        echo "<option value = '".utf8_encode($registro["email"])."'>".utf8_encode($registro["email"])."</option>";
+        
+        echo "<option value='".($registro["email"])."'";
+        if($_GET["contacto_slc"]==$registro["email"])
+        {
+            echo " selected";	
+        }
+        echo ">".($registro["email"])."</option>";
     }
-?>

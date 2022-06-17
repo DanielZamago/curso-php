@@ -5,9 +5,12 @@
     $consulta = "SELECT * FROM paises ORDER BY pais";
     $ejecutar_consulta = $conexion->query($consulta);
     
-    while($registro = $ejecutar_consulta->fetch_assoc()){
-        $nombre_pais = $registro["pais"];
-        echo "a".$nombre_pais;
-        echo "<option value = '$nombre_pais'>$nombre_pais</option>";
+    while($row = $ejecutar_consulta->fetch_assoc()){
+        $nombre_pais = ($row["pais"]);
+        echo "<option value = '$nombre_pais'";
+        if($nombre_pais==($registro["pais"])){
+            echo " selected";
+        }
+        echo ">$nombre_pais</option>";
     }
 ?>

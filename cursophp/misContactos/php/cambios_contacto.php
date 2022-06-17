@@ -9,7 +9,7 @@
     }
 </script>
 
-<form id="cambio_contacto" name="cambio_frm" action="php/modificar_contacto.php" method="post" enctype="application/x-www-form-urlencoded">
+<form id="cambio_contacto" name="cambio_frm" action="php/update_contacto.php" method="POST" enctype="multipart/form-data">
     <fieldset>
         <legend>Cambio Contacto</legend>
         <div>
